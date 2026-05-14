@@ -1,8 +1,10 @@
 package model;
+
 import dao.ProdutoDAO;
 import java.util.ArrayList;
 
 public class Produto {
+
     private int id;
     private String nome;
     private double precoUn;
@@ -14,7 +16,6 @@ public class Produto {
 
     public Produto() {
     }
-    
 
     public Produto(int id, String nome, double precoUn, int unidade, int quantidade, int quantidadeMin, int quantidadeMax, String categoria) {
         this.id = id;
@@ -62,7 +63,7 @@ public class Produto {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -90,16 +91,55 @@ public class Produto {
     public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
-    public ArrayList<Produto> getMinhaLista(){
+
+    public ArrayList<Produto> getMinhaLista() {
         return ProdutoDAO.getMinhaLista();
     }
+
     // Cadastra novo produto
-    public boolean insertProdutoBD(String nome, double precoUn, int unidade, int quantidade, int quantidadeMin, int quantidadeMax, String categoria){
+    public boolean insertProdutoBD(String nome, double precoUn, int unidade, int quantidade, int quantidadeMin, int quantidadeMax, String categoria) {
         int id = ProdutoDAO.maiorID() + 1;
         Produto objeto = new Produto(id, nome, precoUn, unidade, quantidade, quantidadeMin, quantidadeMax, categoria);
         getMinhaLista().add(objeto);
         return true;
     }
 
+    // Deleta um produto pelo ID
+    public boolean deleteAlunoBD(int id) {
+        int indice = this.procuraIndice(id);
+        getMinhaLista().remove(indice);
+        return true;
+    }
+
+    //Edita um produto específico pelo seu campo ID
+    public boolean updateAlunoBD(int id, String nome, double precoUn, int unidade, int quantidade, int quantidadeMin, int quantidadeMax, String categoria) {
+        Produto objeto = new Produto(id, nome, precoUn, unidade, quantidade, quantidadeMin, quantidadeMax, categoria);
+        int indice = this.procuraIndice(id);
+        getMinhaLista().set(indice, objeto);
+        return true;
+
+    }
+
+    // procura o INDICE de objeto da minhaListaque contem o ID enviado.
+    private int procuraIndice(int id) {
+        int indice = -1;
+        for (int i = 0; i < getMinhaLista().size(); i++) {
+            if (getMinhaLista().get(i).getId() == id) {
+                indice = i;
+            }
+        }
+        return indice;
+    }
+// carrega dados de um produto específico pelo seu ID
+
+    public Produto carregaProduto(int id) {
+        int indice = this.procuraIndice(id);
+        return getMinhaLista().get(indice);
+    }
+
+    // retorna o maior ID da nossa base de dados
+    public int maiorID() {
+        return ProdutoDAO.maiorID();
+    }
+
 }
- 
